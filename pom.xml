@@ -64,6 +64,13 @@
             <artifactId>mapstruct</artifactId>
             <version>1.5.5.Final</version>
         </dependency>
+
+        <!-- Azure AI Document Intelligence (Form Recognizer) -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-ai-documentintelligence</artifactId>
+            <version>1.0.0-beta.4</version>
+        </dependency>
     </dependencies>
 
     <build>

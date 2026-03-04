@@ -31,8 +31,5 @@ public class Restaurante {
     @Column(name = "capacidad_maxima", nullable = false)
     private Integer capacidadMaxima;
 
-    @Column(name = "precio_menu", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioMenu;
-
 
 }

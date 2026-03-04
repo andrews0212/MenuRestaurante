@@ -1,8 +1,6 @@
 package com.example.menurestaurante.dto;
 
-import com.example.menurestaurante.entidades.Restaurante;
 import com.example.menurestaurante.entidades.Usuario;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

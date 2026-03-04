@@ -2,8 +2,8 @@ package com.example.menurestaurante.mappers;
 
 
 import com.example.menurestaurante.dto.MenuDiarioDTO;
-import com.example.menurestaurante.entidades.MenuDiario;
 
+import com.example.menurestaurante.entidades.MenuDiario;
 import org.mapstruct.Mapper;
 
 

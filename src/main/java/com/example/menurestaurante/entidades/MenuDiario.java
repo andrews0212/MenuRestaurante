@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -28,8 +27,8 @@ public class MenuDiario {
     @Column(name = "url_imagen", nullable = false)
     private String urlImagen;
 
-    @ManyToMany
-    private Set<Plato> platoes = new LinkedHashSet<>();
+    @Column(name = "precio_menu", precision = 10, scale = 2)
+    private BigDecimal precioMenu;
 
 
 }
