@@ -16,4 +16,5 @@ public class UsuarioDTO {
     private String empresa;
     private String contraseña;
     private Boolean esEmpleado;
+    private Integer idRestaurante; // Solo para empleados, puede ser null para clientes
 }

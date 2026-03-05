@@ -22,6 +22,5 @@ public class RestauranteDTO{
     private BigDecimal latitud;
     private BigDecimal longitud;
     private Integer capacidadMaxima;
-
-
+    private Integer idUsuario;
 }

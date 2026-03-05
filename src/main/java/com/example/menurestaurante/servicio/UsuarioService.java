@@ -3,32 +3,36 @@ package com.example.menurestaurante.servicio;
 import com.example.menurestaurante.dto.UsuarioDTO;
 import com.example.menurestaurante.entidades.Usuario;
 import com.example.menurestaurante.mappers.UsuarioMapper;
+import com.example.menurestaurante.repositorio.RestauranteRepositorio;
 import com.example.menurestaurante.repositorio.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
-
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
     @Autowired
     private UsuarioMapper usuarioMapper;
+    @Autowired
+    private RestauranteRepositorio restauranteRepositorio;
 
     //get
     public UsuarioDTO obtenerUsuario(Integer id){
-        // Obtenemos la ENTIDAD de la base de datos
         Usuario entidad = usuarioRepositorio.getUsuariosById(id).get(0);
-        return usuarioMapper.toDTO(entidad);
+        return convertirADTOConRestaurante(entidad);
     }
     //getAll
     public List<UsuarioDTO> obtenerTodosUsuarios(){
         List<Usuario> usuarios = usuarioRepositorio.findAll();
-        return usuarioMapper.toDTOList(usuarios);
+        return usuarios.stream()
+                .map(this::convertirADTOConRestaurante)
+                .collect(Collectors.toList());
     }
     //post
     public UsuarioDTO insectarUsuario(UsuarioDTO usuarioDTO){
@@ -40,7 +44,7 @@ public class UsuarioService {
             Usuario entidadGuardada = usuarioRepositorio.save(entidadNueva);
 
             // 3. Si tiene éxito, mapeamos a DTO y retornamos
-            return usuarioMapper.toDTO(entidadGuardada);
+            return convertirADTOConRestaurante(entidadGuardada);
 
         } catch (DataIntegrityViolationException e) {
             // Este error específico salta si rompes una regla de la base de datos.
@@ -70,7 +74,7 @@ public class UsuarioService {
             Usuario entidadActualizada = usuarioRepositorio.save(entidad);
 
             // 4. Retornamos la entidad actualizada ya mapeada a DTO
-            return usuarioMapper.toDTO(entidadActualizada);
+            return convertirADTOConRestaurante(entidadActualizada);
 
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Error de integridad: Verifica que no estés duplicando datos únicos como el correo.", e);
@@ -93,5 +97,17 @@ public class UsuarioService {
         } catch (Exception e) {
             throw new RuntimeException("Error inesperado al intentar eliminar el usuario.", e);
         }
+    }
+
+    /**
+     * Convierte un Usuario a UsuarioDTO rellenando el idRestaurante
+     * buscando en la tabla restaurante si tiene uno asociado.
+     */
+    private UsuarioDTO convertirADTOConRestaurante(Usuario usuario) {
+        UsuarioDTO dto = usuarioMapper.toDTO(usuario);
+        // Buscar si este usuario tiene un restaurante asociado
+        restauranteRepositorio.findByIdUsuarioId(usuario.getId())
+                .ifPresent(restaurante -> dto.setIdRestaurante(restaurante.getId()));
+        return dto;
     }
 }
