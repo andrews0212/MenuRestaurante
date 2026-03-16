@@ -34,11 +34,12 @@ public class ValoracionesService {
     // POST - Crear una nueva valoración
     public ValoracionesDTO insertarValoracion(ValoracionesDTO valoracionesDTO) {
         try {
+            validarIdsRequeridos(valoracionesDTO);
             Valoraciones entidadNueva = valoracionesMapper.toEntity(valoracionesDTO);
             Valoraciones entidadGuardada = valoracionesRepositorio.save(entidadNueva);
             return valoracionesMapper.toDTO(entidadGuardada);
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Error: No se pudo crear la valoración. Verifica que los datos sean correctos.", e);
+            throw new RuntimeException("Error: No se pudo crear la valoración. Verifica que usuario, restaurante y plato existan.", e);
         } catch (Exception e) {
             throw new RuntimeException("Error inesperado al intentar guardar la valoración en el sistema.", e);
         }
@@ -50,12 +51,13 @@ public class ValoracionesService {
             if (valoracionesDTO.getId() == null) {
                 throw new IllegalArgumentException("Error: Para actualizar una valoración, el ID no puede ser nulo.");
             }
+            validarIdsRequeridos(valoracionesDTO);
 
             Valoraciones entidad = valoracionesMapper.toEntity(valoracionesDTO);
             Valoraciones entidadActualizada = valoracionesRepositorio.save(entidad);
             return valoracionesMapper.toDTO(entidadActualizada);
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Error de integridad: Verifica que no estés duplicando datos únicos.", e);
+            throw new RuntimeException("Error de integridad: Verifica que usuario, restaurante y plato referenciados existan.", e);
         } catch (Exception e) {
             throw new RuntimeException("Error inesperado al intentar actualizar la valoración.", e);
         }
@@ -69,6 +71,18 @@ public class ValoracionesService {
             valoracionesRepositorio.delete(entidadAEliminar);
         } catch (Exception e) {
             throw new RuntimeException("Error inesperado al intentar eliminar la valoración.", e);
+        }
+    }
+
+    private void validarIdsRequeridos(ValoracionesDTO valoracionesDTO) {
+        if (valoracionesDTO.getIdUsuario() == null) {
+            throw new IllegalArgumentException("Error: idUsuario es obligatorio.");
+        }
+        if (valoracionesDTO.getIdRestaurante() == null) {
+            throw new IllegalArgumentException("Error: idRestaurante es obligatorio.");
+        }
+        if (valoracionesDTO.getIdPlato() == null) {
+            throw new IllegalArgumentException("Error: idPlato es obligatorio.");
         }
     }
 }

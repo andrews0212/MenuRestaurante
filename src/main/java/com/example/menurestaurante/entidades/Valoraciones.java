@@ -22,12 +22,15 @@ public class Valoraciones {
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante idRestaurante;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_plato", nullable = false)
+    private Plato idPlato;
+
     @Column(name = "puntuacion", nullable = false)
     private Integer puntuacion;
 
     @Lob
     @Column(name = "comentario")
     private String comentario;
-
 
 }
