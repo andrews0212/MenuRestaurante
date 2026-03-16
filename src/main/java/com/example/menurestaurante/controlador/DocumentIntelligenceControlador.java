@@ -88,13 +88,11 @@ public class DocumentIntelligenceControlador {
      *
      * Ejemplo: POST /api/document-intelligence/analizar-y-guardar/{restauranteId}
      * Body: form-data con campo "archivo" (imagen/pdf del menú)
-     *       y opcionalmente "urlImagen" (URL donde se almacenó la imagen)
      */
     @PostMapping(value = "/analizar-y-guardar/{restauranteId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> analizarYGuardarMenu(
             @PathVariable Integer restauranteId,
-            @RequestParam("archivo") MultipartFile archivo,
-            @RequestParam(value = "urlImagen", required = false) String urlImagen) {
+            @RequestParam("archivo") MultipartFile archivo) {
         try {
             // Validar archivo
             if (archivo.isEmpty()) {
@@ -109,7 +107,7 @@ public class DocumentIntelligenceControlador {
             }
 
             MenuExtraidoResponseDTO resultado = azureDocumentIntelligenceService
-                    .analizarYGuardarMenu(archivo, restauranteId, urlImagen);
+                    .analizarYGuardarMenu(archivo, restauranteId, null);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 
